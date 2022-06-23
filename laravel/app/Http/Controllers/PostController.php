@@ -14,7 +14,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::all();
+        return view('posts.index', ['posts' => $posts]);
     }
 
     /**
@@ -24,7 +25,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('post.create');
     }
 
     /**
@@ -35,7 +36,16 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $id = Auth::id();
+
+        $post = new Post();
+        
+        $post->body = $request->body;
+        $post->user_id = $id;
+
+        $post->save();
+
+        return redirect()->to('/posts');
     }
 
     /**
@@ -46,7 +56,11 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $usr_id = $post->user_id;
+        $user = DB::table('users')->where('id', $usr_id)->first();
+        
+
+        return view('posts.detail',['post' => $post,'user' => $user]);
     }
 
     /**
@@ -57,7 +71,9 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        $post = \App\Post::findOrFail($id);
+
+        return view('posts.edit',['post' => $post]);
     }
 
     /**
@@ -69,7 +85,17 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $id = $request->post_id;
+        
+        //レコードを検索
+        $post = Post::findOrFail($id);
+        
+        $post->body = $request->body;
+        
+        //保存（更新）
+        $post->save();
+        
+        return redirect()->to('/posts');
     }
 
     /**
@@ -80,6 +106,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post = \App\Post::find($id);
+        //削除
+        $post->delete();
+
+        return redirect()->to('/posts');
     }
 }
