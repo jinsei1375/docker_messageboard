@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Post;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+
 class PostController extends Controller
 {
     /**
@@ -16,6 +20,7 @@ class PostController extends Controller
     {
         $posts = Post::all();
         return view('posts.index', ['posts' => $posts]);
+
     }
 
     /**
@@ -25,7 +30,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('post.create');
+        
+        return view('posts.create');
     }
 
     /**
@@ -37,7 +43,7 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $id = Auth::id();
-
+        //インスタンス作成
         $post = new Post();
         
         $post->body = $request->body;
@@ -45,7 +51,7 @@ class PostController extends Controller
 
         $post->save();
 
-        return redirect()->to('/posts');
+       return redirect()->to('/posts');
     }
 
     /**
@@ -69,12 +75,15 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit($id)
     {
+        // $usr_id = $post->user_id;
         $post = \App\Post::findOrFail($id);
 
         return view('posts.edit',['post' => $post]);
+        // return view('posts.edit');
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -83,7 +92,7 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request)
     {
         $id = $request->post_id;
         
@@ -104,7 +113,7 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
         $post = \App\Post::find($id);
         //削除
