@@ -78,9 +78,9 @@ class PostController extends Controller
     public function edit($id)
     {
         // $usr_id = $post->user_id;
-        $post = \App\Post::findOrFail($id);
+        $post = Post::findOrFail($id);
 
-        return view('posts.edit',['post' => $post]);
+        return view('posts.edit',['post' => $post,'id' => $id]);
         // return view('posts.edit');
     }
 
@@ -115,7 +115,7 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        $post = \App\Post::find($id);
+        $post = Post::find($id);
         //削除
         $post->delete();
 
